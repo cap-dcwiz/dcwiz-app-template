@@ -1,0 +1,37 @@
+version: "3.8"
+
+networks:
+  default:
+    name: dcwiz-app
+    external: true
+
+services:
+  prepare-database:
+    image: postgres:15
+    environment:
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_USER: ${POSTGRES_ADMIN_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD}
+    volumes:
+      - ./scripts:/opt/scripts
+    command: /opt/scripts/create_postgres_database.sh ${POSTGRES_DB} ${POSTGRES_USER} ${POSTGRES_PASSWORD}
+
+  {{ cookiecutter.container_name }}:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - "--root-path=/{{ cookiecutter.app_path }}"
+    depends_on:
+      prepare-database:
+        condition: service_completed_successfully
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ cookiecutter.container_name }}.rule=PathPrefix(`/{{ cookiecutter.app_path }}/`)"
+      - "traefik.http.routers.{{ cookiecutter.container_name }}.entrypoints=https"
+      - "traefik.http.routers.{{ cookiecutter.container_name }}.tls=true"
+      - "traefik.http.services.{{ cookiecutter.container_name }}.loadbalancer.server.port=8000"
+      - "traefik.http.middlewares.{{ cookiecutter.container_name }}-strip.stripprefix.prefixes=/{{ cookiecutter.app_path }}"
+      - "traefik.http.middlewares.{{ cookiecutter.container_name }}-strip.stripprefix.forceSlash=false"
+      - "traefik.http.middlewares.{{ cookiecutter.container_name }}-add-header.headers.customrequestheaders.x-auth-resource={{ cookiecutter.container_name }}"
+      - "traefik.http.routers.{{ cookiecutter.container_name }}.middlewares={{ cookiecutter.container_name }}-strip, {{ cookiecutter.container_name }}-add-header, authorize@file"
