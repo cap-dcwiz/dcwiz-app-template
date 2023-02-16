@@ -1,0 +1,34 @@
+- name: Run using a project directory
+  hosts: {{ "'{{ host_group }}'" }}
+  vars:
+    env_pos: {{ "'{{ ansible_env.HOME }}/envs/" }}{{ cookiecutter.project_folder }}'
+    pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.project_folder }}/'
+  tasks: 
+    - name: send config to host
+      ansible.builtin.copy:
+        src: ../config
+        dest: {{ "'{{ pos }}'" }}
+    - name: send resources to host
+      ansible.builtin.copy:
+        src: ../resources
+        dest: {{ "'{{ pos }}'" }}
+    - name: send scripts to host
+      ansible.builtin.copy:
+        src: ../scripts
+        dest: {{ "'{{ pos }}'" }}
+        permission: 0757
+    - name: send docker-compose.yml to host
+      ansible.builtin.copy:
+        src: ../docker-compose.yaml
+        dest: {{ "'{{ pos }}'" }}
+    - name: copy .env to host
+      ansible.builtin.copy:
+        src: {{ "'{{ ansible_env.HOME }}/dcwiz-deploy-prepare/envs/" }}{{ cookiecutter.project_folder }}/'
+        dest: {{ "'{{ pos }}/.env'" }}
+        remote_src: true
+    - name: start docker-compose
+      community.docker.docker_compose:
+        project_src: {{ "'{{ pos }}'" }}
+        state: present
+        pull: true
+        build: true

@@ -6,6 +6,7 @@
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
     "bin_name": "{{ cookiecutter.project_slug }}",
     "container_name": "{{ '-'.join(cookiecutter.project_folder.split('-')[1:]) }}",
+    "image_name": "{{ cookiecutter.project_folder }}",
     "app_path": "{{ cookiecutter.container_name.split('-')[-1] }}",
     "project_short_description": "A Demo DCWiz Application",
     "version": "0.1.0",
