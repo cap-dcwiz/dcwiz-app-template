@@ -1,6 +1,6 @@
 {
-    "full_name": "Zhaomeng Zhu",
-    "email": "zhaomeng.zhu@gmail.com",
+    "full_name": "RDA Developer",
+    "email": "developer@rdai.ai",
     "project_name": "DCWiz App Demo",
     "project_folder": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
