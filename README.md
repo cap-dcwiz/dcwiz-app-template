@@ -23,20 +23,51 @@ the initialization of the project. If you want to change the path, modify the do
 
 ## Deployment
 
-1. populate the `.env` file with the correct values.
-to be continued...
+Note: all the commands should be run in poetry virtual environment.
 
-2. Run the following command to start the server.
+### 1. populate the `.env` and authorization files.
 ```bash
-pr ansible-playbook -i ansible/hosts.yaml -e host_group=experimental ansible/up.yaml
+ansible-playbook \
+  -i ansible/hosts.yaml \
+  -e host_group=test \
+  -e env_file=export/env.example \
+  ansible/up.yaml
+```
+Note: if env_file is not specified, ".env" will be used by default.
+
+### 2. Build docker images
+```bash
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  --push \
+  -t ghcr.io/cap-dcwiz/<image_name>:test \
+  .
+```
+where, by default, the image name is the project folder name, and the tag is the host group name.
+
+Note: you may need to login to the container registry first.
+
+### 3. Run the following command to start the service.
+```bash
+ansible-playbook \
+  -i ansible/hosts.yaml \
+  -e host_group=test \
+  ansible/up.yaml
 ```
 
-3. Run the following command to stop the server.
+### 4. Run the following command to stop the service.
 ```bash
-pr ansible-playbook -i ansible/hosts.yaml -e host_group=experimental ansible/down.yaml
+ansible-playbook \
+  -i ansible/hosts.yaml \
+  -e host_group=test \
+  ansible/down.yaml
 ```
 
-4. Run the following command to clean.
+### 5. Run the following command to stop the service and clean.
 ```bash
-pr ansible-playbook -i ansible/hosts.yaml -e host_group=experimental ansible/clean.yaml
+ansible-playbook \
+  -i ansible/hosts.yaml \
+  -e host_group=test \
+  ansible/clean.yaml
 ```
+Note: this command will remove all the data in the database, as well as populated `.env` and authorization files.
