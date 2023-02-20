@@ -4,6 +4,8 @@
     pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.__project_folder }}/'
   tasks:
     - name: stop docker-compose
+      environment:
+        IMAGE_TAG: {{ "'{{ host_group }}'" }}
       community.docker.docker_compose:
         project_src: {{ "'{{ pos }}'" }}
         state: absent

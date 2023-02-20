@@ -37,3 +37,19 @@ services:
       - "traefik.http.middlewares.{{ cookiecutter.__container_name }}-strip.stripprefix.forceSlash=false"
       - "traefik.http.middlewares.{{ cookiecutter.__container_name }}-add-header.headers.customrequestheaders.x-auth-resource={{ cookiecutter.__container_name }}"
       - "traefik.http.routers.{{ cookiecutter.__container_name }}.middlewares={{ cookiecutter.__container_name }}-strip, {{ cookiecutter.__container_name }}-add-header, authorize@file"
+
+  {% if cookiecutter.need_database == "y" -%}
+  clean-database:
+    image: postgres:15
+    environment:
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_USER: ${POSTGRES_ADMIN_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD}
+    volumes:
+      - ./scripts:/opt/scripts
+    depends_on:
+      prepare-database:
+        condition: service_completed_successfully
+    command: /opt/scripts/drop_postgres_database.sh ${POSTGRES_DB} ${POSTGRES_USER}
+    profiles: [ "clean" ]
+  {%- endif %}

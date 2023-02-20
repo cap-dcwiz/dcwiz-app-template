@@ -1,8 +1,9 @@
 - name: Run using a project directory
   hosts: {{ "'{{ host_group }}'" }}
   vars:
-    env_pos: {{ "'{{ ansible_env.HOME }}/dcwiz-deploy-prepare/envs/" }}{{ cookiecutter.__project_folder }}'
-    pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.__project_folder }}/'
+    app_name: {{ cookiecutter.__project_folder }}
+    env_pos: {{ "'{{ ansible_env.HOME }}/dcwiz-deploy-prepare/envs/{{ app_name }}'" }}
+    pos: {{ "'{{ ansible_env.HOME }}/{{ app_name }}'" }}
   tasks: 
     - name: send config to host
       ansible.builtin.copy:
@@ -32,6 +33,8 @@
         remote_src: true
       when: env_pos_stat.stat.exists
     - name: start docker-compose
+      environment:
+        IMAGE_TAG: {{ "'{{ host_group }}'" }}
       community.docker.docker_compose:
         project_src: {{ "'{{ pos }}'" }}
         state: present

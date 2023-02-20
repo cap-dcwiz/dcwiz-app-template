@@ -1,12 +1,54 @@
 - name: Run using a project directory
   hosts: {{ "'{{ host_group }}'" }}
   vars:
-    pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.__project_folder }}/'
+    app_name: {{ cookiecutter.__project_folder }}
+    local_authz_pos: export/authz.yaml
+    env_pos: {{ "'{{ ansible_env.HOME }}/dcwiz-deploy-prepare/envs/{{ app_name }}'" }}
+    authz_pos: {{ "'{{ ansible_env.HOME }}/dcwiz-auth-stack/config/def.d/{{ app_name }}.yaml'" }}
+    pos: {{ "'{{ ansible_env.HOME }}/{{ app_name }}/'" }}
   tasks:
+    - name: check if {{ "{{ pos }}" }} exists
+      ansible.builtin.stat:
+        path: {{ "'{{ pos }}'" }}
+      register: pos_stat
     - name: stop docker-compose
       community.docker.docker_compose:
         project_src: {{ "'{{ pos }}'" }}
         state: absent
+      when: pos_stat.stat.exists
+    - name: run docker-compose profile "clean"
+      environment:
+        IMAGE_TAG: {{ "'{{ host_group }}'" }}
+      community.docker.docker_compose:
+        project_src: {{ "'{{ pos }}'" }}
+        state: present
+        profiles: "clean"
+      when: pos_stat.stat.exists
+    - name: stop docker-compose profile "clean"
+      community.docker.docker_compose:
+        project_src: {{ "'{{ pos }}'" }}
+        state: absent
+        profiles: "clean"
+      when: pos_stat.stat.exists
+    - name: unpopulate {{ "{{ env_file }}" }} from host
+      ansible.builtin.file:
+        path: {{ "'{{ env_pos }}'" }}
+        state: absent
+    - name: check if authz_pos exists
+      ansible.builtin.stat:
+        path: {{ "'{{ authz_pos }}'" }}
+      register: authz_pos_stat
+    - name: unpopulate authz definition from host if exists
+      ansible.builtin.file:
+        path: {{ "'{{ authz_pos }}'" }}
+        state: absent
+      when: authz_pos_stat.stat.exists
+    - name: request auth-service to reload authz definition
+      uri:
+        url: 'https://localhost/auth/authz/reload'
+        method: GET
+        status_code: 200
+        validate_certs: false
     - name: remove folder
       ansible.builtin.file:
         path: {{ "'{{ pos }}'" }}
