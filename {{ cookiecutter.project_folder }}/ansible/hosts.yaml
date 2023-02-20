@@ -4,3 +4,9 @@ main:
       ansible_host: 34.126.182.182
       ansible_user: ansible
       ansible_python_interpreter: '/home/ansible/dcwiz-deploy-prepare/venv/bin/python'
+test:
+  hosts:
+    gcloud:
+      ansible_host: 34.142.173.209
+      ansible_user: ansible
+      ansible_python_interpreter: '/home/ansible/dcwiz-deploy-prepare/venv/bin/python'

@@ -16,7 +16,7 @@
       ansible.builtin.copy:
         src: ../scripts
         dest: {{ "'{{ pos }}'" }}
-        permission: 0757
+        mode: 0757
     - name: send docker-compose.yml to host
       ansible.builtin.copy:
         src: ../docker-compose.yaml
