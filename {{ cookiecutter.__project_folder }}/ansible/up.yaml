@@ -9,15 +9,18 @@
       ansible.builtin.copy:
         src: ../config
         dest: {{ "'{{ pos }}'" }}
+      when: "'config' is exists"
     - name: send resources to host
       ansible.builtin.copy:
         src: ../resources
         dest: {{ "'{{ pos }}'" }}
+      when: "'resources' is exists"
     - name: send scripts to host
       ansible.builtin.copy:
         src: ../scripts
         dest: {{ "'{{ pos }}'" }}
         mode: 0757
+      when: "'scripts' is exists"
     - name: send docker-compose.yml to host
       ansible.builtin.copy:
         src: ../docker-compose.yaml
