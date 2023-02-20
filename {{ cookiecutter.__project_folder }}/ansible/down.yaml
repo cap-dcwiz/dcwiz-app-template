@@ -1,7 +1,7 @@
 - name: Run using a project directory
   hosts: {{ "'{{ host_group }}'" }}
   vars:
-    pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.project_folder }}/'
+    pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.__project_folder }}/'
   tasks:
     - name: stop docker-compose
       community.docker.docker_compose:

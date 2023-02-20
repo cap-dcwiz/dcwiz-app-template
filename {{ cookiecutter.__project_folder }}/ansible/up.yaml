@@ -1,8 +1,8 @@
 - name: Run using a project directory
   hosts: {{ "'{{ host_group }}'" }}
   vars:
-    env_pos: {{ "'{{ ansible_env.HOME }}/dcwiz-deploy-prepare/envs/" }}{{ cookiecutter.project_folder }}'
-    pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.project_folder }}/'
+    env_pos: {{ "'{{ ansible_env.HOME }}/dcwiz-deploy-prepare/envs/" }}{{ cookiecutter.__project_folder }}'
+    pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.__project_folder }}/'
   tasks: 
     - name: send config to host
       ansible.builtin.copy:

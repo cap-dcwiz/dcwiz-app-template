@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "{{ cookiecutter.project_slug }}"
+name = "{{ cookiecutter.project_name }}"
 version = "{{ cookiecutter.version }}"
 description = "{{ cookiecutter.project_short_description }} }}"
 authors = ["{{ cookiecutter.full_name }} <{{ cookiecutter.email }}>"]
-packages = [{include = "{{ cookiecutter.project_slug }}"}]
+packages = [{include = "{{ cookiecutter.__project_slug }}"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -18,4 +18,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-{{ cookiecutter.bin_name }} = "{{ cookiecutter.project_slug }}.app:main"
+{{ cookiecutter.__bin_name }} = "{{ cookiecutter.__project_slug }}.app:main"

@@ -44,7 +44,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/cap-dcwiz/{{ cookiecutter.image_name }}:{{ '${{ steps.vars.outputs.branch }}' }}
+          tags: ghcr.io/cap-dcwiz/{{ cookiecutter.__image_name }}:{{ '${{ steps.vars.outputs.branch }}' }}
 
       - name: Deploy
         uses: dawidd6/action-ansible-playbook@v2

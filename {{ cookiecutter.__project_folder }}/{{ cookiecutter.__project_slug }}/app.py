@@ -14,6 +14,6 @@ def make_app():
 
 
 main = create_cli_main(make_app,
-                       envvar_prefix="{{ cookiecutter.project_slug.upper() }}",
+                       envvar_prefix="{{ cookiecutter.__project_slug.upper() }}",
                        default_config="config/config.toml",
                        )

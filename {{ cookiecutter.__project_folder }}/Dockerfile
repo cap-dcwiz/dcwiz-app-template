@@ -10,7 +10,7 @@ RUN poetry config virtualenvs.create false
 WORKDIR /opt
 
 COPY pyproject.toml /opt/
-COPY {{ cookiecutter.project_slug }} /opt/{{ cookiecutter.project_slug }}
+COPY {{ cookiecutter.__project_slug }} /opt/{{ cookiecutter.__project_slug }}
 
 RUN apt-get update && apt-get upgrade -y &&  apt-get install build-essential -y && \
     poetry install --no-dev && \
@@ -20,4 +20,4 @@ RUN apt-get update && apt-get upgrade -y &&  apt-get install build-essential -y 
 COPY alembic.ini /opt/alembic.ini
 COPY alembic /opt/alembic
 
-ENTRYPOINT ["{{ cookiecutter.bin_name }}"]
+ENTRYPOINT ["{{ cookiecutter.__bin_name }}"]
