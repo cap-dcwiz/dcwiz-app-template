@@ -17,9 +17,7 @@ services:
     command: /opt/scripts/create_postgres_database.sh ${POSTGRES_DB} ${POSTGRES_USER} ${POSTGRES_PASSWORD}
 
   {{ cookiecutter.container_name }}:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/cap-dcwiz/{{ cookiecutter.image_name }}:${IMAGE_TAG}
     command:
       - "--root-path=/{{ cookiecutter.app_path }}"
     depends_on:

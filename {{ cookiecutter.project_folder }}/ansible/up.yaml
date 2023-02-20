@@ -1,7 +1,7 @@
 - name: Run using a project directory
   hosts: {{ "'{{ host_group }}'" }}
   vars:
-    env_pos: {{ "'{{ ansible_env.HOME }}/envs/" }}{{ cookiecutter.project_folder }}'
+    env_pos: {{ "'{{ ansible_env.HOME }}/dcwiz-deploy-prepare/envs/" }}{{ cookiecutter.project_folder }}'
     pos: {{ "'{{ ansible_env.HOME }}/" }}{{ cookiecutter.project_folder }}/'
   tasks: 
     - name: send config to host
@@ -21,11 +21,16 @@
       ansible.builtin.copy:
         src: ../docker-compose.yaml
         dest: {{ "'{{ pos }}'" }}
-    - name: copy .env to host
+    - name: read env_pos file info
+      ansible.builtin.stat:
+        path: {{ "'{{ env_pos }}'" }}
+      register: env_pos_stat
+    - name: copy .env to host if exists
       ansible.builtin.copy:
-        src: {{ "'{{ ansible_env.HOME }}/dcwiz-deploy-prepare/envs/" }}{{ cookiecutter.project_folder }}/'
+        src: {{ "'{{ env_pos }}'" }}
         dest: {{ "'{{ pos }}/.env'" }}
         remote_src: true
+      when: env_pos_stat.stat.exists
     - name: start docker-compose
       community.docker.docker_compose:
         project_src: {{ "'{{ pos }}'" }}
