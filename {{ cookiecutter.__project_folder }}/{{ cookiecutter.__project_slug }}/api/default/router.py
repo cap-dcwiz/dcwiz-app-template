@@ -1,3 +1,4 @@
+from .schemas import HealthStatus
 from fastapi import APIRouter
 from dcwiz_app_utils.response import wrap_response
 
@@ -11,9 +12,10 @@ async def startup():
     # TODO: initialize...
 
 
-# Define your endpoints here
-
 @router.get("/health")
 @wrap_response()
-async def health():
+async def health() -> HealthStatus:
     return {"status": "ok"}
+
+
+# Define your endpoints here
