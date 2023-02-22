@@ -6,7 +6,7 @@ authors = ["{{ cookiecutter.full_name }} <{{ cookiecutter.email }}>"]
 packages = [{include = "{{ cookiecutter.__project_slug }}"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 dcwiz-app-utils = {git = "https://github.com/cap-dcwiz/dcwiz-app-utils.git", rev = "main"}
 
 [tool.poetry.group.dev.dependencies]

@@ -1,0 +1,55 @@
+version: "3.8"
+
+networks:
+  default:
+    name: dcwiz-app
+    external: true
+
+services:
+  {% if cookiecutter.need_database == "y" -%}
+  prepare-database:
+    image: postgres:15
+    environment:
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_USER: ${POSTGRES_ADMIN_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD}
+    volumes:
+      - ./scripts:/opt/scripts
+    command: /opt/scripts/create_postgres_database.sh ${POSTGRES_DB} ${POSTGRES_USER} ${POSTGRES_PASSWORD}
+  {%- endif %}
+
+  {{ cookiecutter.__container_name }}:
+    image: ghcr.io/cap-dcwiz/{{ cookiecutter.__image_name }}:${IMAGE_TAG}
+    command:
+      - "--root-path=/{{ cookiecutter.app_path }}"
+    {% if cookiecutter.need_database == "y" -%}
+    depends_on:
+      prepare-database:
+        condition: service_completed_successfully
+    {%- endif %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ cookiecutter.__container_name }}.rule=PathPrefix(`/{{ cookiecutter.app_path }}/`)"
+      - "traefik.http.routers.{{ cookiecutter.__container_name }}.entrypoints=https"
+      - "traefik.http.routers.{{ cookiecutter.__container_name }}.tls=true"
+      - "traefik.http.services.{{ cookiecutter.__container_name }}.loadbalancer.server.port=8000"
+      - "traefik.http.middlewares.{{ cookiecutter.__container_name }}-strip.stripprefix.prefixes=/{{ cookiecutter.app_path }}"
+      - "traefik.http.middlewares.{{ cookiecutter.__container_name }}-strip.stripprefix.forceSlash=false"
+      - "traefik.http.middlewares.{{ cookiecutter.__container_name }}-add-header.headers.customrequestheaders.x-auth-resource={{ cookiecutter.__container_name }}"
+      - "traefik.http.routers.{{ cookiecutter.__container_name }}.middlewares={{ cookiecutter.__container_name }}-strip, {{ cookiecutter.__container_name }}-add-header, authorize@file"
+
+  {% if cookiecutter.need_database == "y" -%}
+  clean-database:
+    image: postgres:15
+    environment:
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_USER: ${POSTGRES_ADMIN_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD}
+    volumes:
+      - ./scripts:/opt/scripts
+    depends_on:
+      prepare-database:
+        condition: service_completed_successfully
+    command: /opt/scripts/drop_postgres_database.sh ${POSTGRES_DB} ${POSTGRES_USER}
+    profiles: [ "clean" ]
+  {%- endif %}

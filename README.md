@@ -21,6 +21,35 @@ $ cookiecutter gh:cap-dcwiz/dcwiz-app-template
 9. After deployment, by default, the API will be available at `http://<host>:<port>/<APP_PATH>`, which is set during 
 the initialization of the project. If you want to change the path, modify the docker compose file.
 
+### How to setup the development environment
+
+1. Install [poetry](https://python-poetry.org/docs/#installation).
+
+2. Install poetry environment and dependencies.
+```bash
+$ poetry install
+```
+
+3. If database is needed, create the database and user.
+```bash
+$ docker compose up -d
+```
+Note: the docker-compose.yaml file will be created only when the database is needed.
+
+4. Create a .env file
+```bash
+$ cp export/env.dev .env
+```
+
+5. Run the following command to start the service.
+```bash
+$ poetry run <app name>
+```
+Note: Check the `pyproject.toml` file to see the name of the app. By default, it is the project folder name but 
+replacing "_" with "-".
+
+6. Check the API documentation at `http://localhost:8000/docs`. By default, there should be a health check endpoint.
+
 ## Deployment
 
 Note: all the commands should be run in poetry virtual environment.

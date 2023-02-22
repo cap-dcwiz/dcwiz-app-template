@@ -23,7 +23,7 @@
       when: "'scripts' is exists"
     - name: send docker-compose.yml to host
       ansible.builtin.copy:
-        src: ../docker-compose.yaml
+        src: ../docker-compose.prod.yaml
         dest: {{ "'{{ pos }}'" }}
     - name: read env_pos file info
       ansible.builtin.stat:

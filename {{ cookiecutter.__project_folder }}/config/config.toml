@@ -1,2 +1,20 @@
-[categories]
-foo="bar"
+[auth]
+#url = "https://auth.experimental.rda.ai/auth/"
+
+[sqlalchemy]
+#uri = "postgresql+psycopg2://postgres:postgres@localhost:5432/dcwiz_auth"
+
+[redis]
+#host = "localhost"
+#port = 6379
+#db = 0
+#password = "redis"
+
+[platform]
+#username = "user"
+#password = "password"
+#base_url = "https://dcwiz-platform.dev.rda.ai"
+#cache_ttl = 120
+#cache_ttl_var = 60
+#timeout = 60
+#verify = false
