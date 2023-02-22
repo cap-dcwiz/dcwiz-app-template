@@ -1,4 +1,4 @@
-from dcwiz_app_utils.cli import create_cli_main
+from dcwiz_app_utils import create_cli_main
 from fastapi import FastAPI
 
 
@@ -8,6 +8,7 @@ def make_app():
 
     app = FastAPI()
     for prefix, router in router_map.items():
+        print(f"Registering router {router} at {prefix or '/'}")
         app.include_router(router, prefix=prefix)
 
     return app

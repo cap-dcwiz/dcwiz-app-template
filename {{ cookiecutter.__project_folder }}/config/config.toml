@@ -2,7 +2,7 @@
 #url = "https://auth.experimental.rda.ai/auth/"
 
 [sqlalchemy]
-#uri = "postgresql+psycopg2://postgres:postgres@localhost:5432/dcwiz_auth"
+#url = "postgresql+psycopg2://postgres:postgres@localhost:5432/{{ cookiecutter.app_path.replace('-', '_') }}"
 
 [redis]
 #host = "localhost"

@@ -2,11 +2,13 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from dcwiz_app_utils.alembic import get_config_and_target_metadata
+from dcwiz_app_utils.alembic import get_config
+from {{ cookiecutter.__project_slug }}.db.models import DBBase
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-config, target_metadata = get_config_and_target_metadata(context)
+config = get_config(context)
+target_metadata = DBBase.metadata
 
 
 def run_migrations_offline() -> None:
