@@ -9,3 +9,4 @@
       community.docker.docker_compose:
         project_src: {{ "'{{ pos }}'" }}
         state: absent
+        profiles: "app"

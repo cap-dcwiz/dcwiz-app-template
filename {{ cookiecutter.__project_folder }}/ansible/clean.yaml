@@ -15,6 +15,7 @@
       community.docker.docker_compose:
         project_src: {{ "'{{ pos }}'" }}
         state: absent
+        profiles: "app"
       when: pos_stat.stat.exists
     - name: run docker-compose profile "clean"
       environment:

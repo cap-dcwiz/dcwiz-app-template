@@ -16,16 +16,39 @@ services:
     volumes:
       - ./scripts:/opt/scripts
     command: /opt/scripts/create_postgres_database.sh ${POSTGRES_DB} ${POSTGRES_USER} ${POSTGRES_PASSWORD}
+    profiles:
+      - "app"
+
+  {{ cookiecutter.__container_name }}-migrate:
+    image: ghcr.io/cap-dcwiz/{{ cookiecutter.__image_name }}:${IMAGE_TAG}
+    volumes:
+      - ./config:/opt/config
+    entrypoint: [ "alembic", "upgrade", "head" ]
+    environment:
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    depends_on:
+      prepare-database:
+        condition: service_completed_successfully
+    profiles:
+      - "app"
   {%- endif %}
 
   {{ cookiecutter.__container_name }}:
     image: ghcr.io/cap-dcwiz/{{ cookiecutter.__image_name }}:${IMAGE_TAG}
+    volumes:
+      - ./config:/opt/config
     command:
       - "--root-path=/{{ cookiecutter.app_path }}"
+      - "--config=/opt/config/config.prod.toml"
     {% if cookiecutter.need_database == "y" -%}
     depends_on:
       prepare-database:
         condition: service_completed_successfully
+      {{ cookiecutter.__container_name }}-migrate:
+          condition: service_completed_successfully
     {%- endif %}
     labels:
       - "traefik.enable=true"
@@ -37,6 +60,8 @@ services:
       - "traefik.http.middlewares.{{ cookiecutter.__container_name }}-strip.stripprefix.forceSlash=false"
       - "traefik.http.middlewares.{{ cookiecutter.__container_name }}-add-header.headers.customrequestheaders.x-auth-resource={{ cookiecutter.__container_name }}"
       - "traefik.http.routers.{{ cookiecutter.__container_name }}.middlewares={{ cookiecutter.__container_name }}-strip, {{ cookiecutter.__container_name }}-add-header, authorize@file"
+    profiles:
+      - "app"
 
   {% if cookiecutter.need_database == "y" -%}
   clean-database:
@@ -47,9 +72,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD}
     volumes:
       - ./scripts:/opt/scripts
-    depends_on:
-      prepare-database:
-        condition: service_completed_successfully
     command: /opt/scripts/drop_postgres_database.sh ${POSTGRES_DB} ${POSTGRES_USER}
-    profiles: [ "clean" ]
+    profiles:
+      - "clean"
   {%- endif %}
