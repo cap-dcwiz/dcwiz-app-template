@@ -1,8 +1,8 @@
-from dcwiz_app_utils import ORMLinkedSchema
-from pydantic import BaseModel, Field, validator
+from dcwiz_app_utils import ResponseSchema
+from pydantic import Field, validator
 
 
-class HealthStatus(BaseModel):
+class HealthStatus(ResponseResultSchema):
     status: str
 
 
