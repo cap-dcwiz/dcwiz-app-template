@@ -1,12 +1,12 @@
 main:
   hosts:
-    gcloud:
-      ansible_host: 34.126.182.182
+    gcloud-dcwiz-app-experimental:
+      ansible_host: app.experimental.rda.ai
       ansible_user: ansible
       ansible_python_interpreter: '/home/ansible/dcwiz-deploy-prepare/venv/bin/python'
 test:
   hosts:
-    gcloud:
-      ansible_host: 34.142.173.209
+    gcloud-app-dev-test :
+      ansible_host: 34.124.154.227
       ansible_user: ansible
       ansible_python_interpreter: '/home/ansible/dcwiz-deploy-prepare/venv/bin/python'
