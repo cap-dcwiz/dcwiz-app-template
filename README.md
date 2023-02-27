@@ -106,3 +106,9 @@ ansible-playbook \
   ansible/clean.yaml
 ```
 Note: this command will remove all the data in the database, as well as populated `.env` and authorization files.
+
+### How to enable github actions
+
+1. ADD `SSH_PRIVATE_KEY` in the repository secrets.
+2. Repo settings => Actions => General => Enable "Read and write permissions" 
+3. Package settings => Manage Action access => add repo
