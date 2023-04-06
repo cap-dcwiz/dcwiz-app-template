@@ -3,6 +3,7 @@
     - scope:{{ cookiecutter.__container_name }}=child@scope:system
     - scope:system=parent@scope:{{ cookiecutter.__container_name }}
   bypass:
+    - "GET /health"
     - "GET /docs"
     - "GET /openapi.json"
   conditions:
