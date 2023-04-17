@@ -62,6 +62,8 @@ services:
       - "traefik.http.routers.{{ cookiecutter.__container_name }}.middlewares={{ cookiecutter.__container_name }}-strip, {{ cookiecutter.__container_name }}-add-header, authorize@file"
     profiles:
       - "app"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   {% if cookiecutter.need_database == "y" -%}
   clean-database:
