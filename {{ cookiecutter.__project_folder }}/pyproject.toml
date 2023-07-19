@@ -12,9 +12,6 @@ dcwiz-app-utils = {git = "https://github.com/cap-dcwiz/dcwiz-app-utils.git", rev
 [tool.poetry.group.dev.dependencies]
 black = {extras = ["d"], version = "^23.1.0"}
 ansible = "^7.2.0"
-authlib = "^1.2.0"
-itsdangerous = "^2.1.2"
-python-dotenv = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]
