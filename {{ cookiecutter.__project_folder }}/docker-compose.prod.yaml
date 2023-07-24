@@ -43,6 +43,12 @@ services:
     command:
       - "--root-path=/{{ cookiecutter.app_path }}"
       - "--config=/opt/config/config.prod.toml"
+    environment:
+      {{ cookiecutter.__project_config_prefix }}_AUTH__URL: ${AUTH_URL}
+      {{ cookiecutter.__project_config_prefix }}_PLATFORM__BASE_URL: ${PLATFORM_BASE_URL}
+      {{ cookiecutter.__project_config_prefix }}_PLATFORM__USERNAME: ${PLATFORM_USERNAME}
+      {{ cookiecutter.__project_config_prefix }}_PLATFORM__PASSWORD: ${PLATFORM_PASSWORD}
+      TZ: ${TZ}
     {% if cookiecutter.need_database == "y" -%}
     depends_on:
       prepare-database:
