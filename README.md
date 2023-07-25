@@ -50,10 +50,11 @@ replacing "_" with "-".
 
 6. Check the API documentation at `http://localhost:8000/docs`. By default, there should be a health check endpoint.
 
-Additionally, one can run the following command to migrate or upgrade the database.
+#### Database init and migration
+If the app uses database, run the following command to init, migrate or upgrade tables.
 ```bash
-DCWIZ_APP_CONFIG=config/config.toml pr alembic revision --autogenerate
-DCWIZ_APP_CONFIG=config/config.toml pr alembic upgrade head
+DCWIZ_APP_CONFIG=config/config.toml poetry run alembic revision --autogenerate
+DCWIZ_APP_CONFIG=config/config.toml poetry run alembic upgrade head
 ```
 
 ## Deployment
