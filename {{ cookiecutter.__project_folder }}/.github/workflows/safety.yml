@@ -1,0 +1,47 @@
+name: Safety Scan
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  safety:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup safety
+        run: pip install safety
+
+      - name: Run safety
+        env:
+          SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
+        id: run_safety
+        run: |
+          set +e
+          out=$(safety --stage cicd scan --detailed-output)
+          err=$?
+          echo - "$out"
+          echo - "$out" > CI_safety_report.txt
+          exit $?
+
+      - name: Comment with safety results
+        uses: mshick/add-pr-comment@v2.8.2
+        if: '!cancelled()'
+        with:
+          message-path: CI_safety_report.txt
+          message-id: 15
+
+      - name: Upload artifacts
+        if: '!cancelled()'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Safety vuln report
+          path: CI_safety_report.txt
