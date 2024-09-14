@@ -10,7 +10,7 @@ python = "^3.11"
 dcwiz-app-utils = {git = "https://github.com/cap-dcwiz/dcwiz-app-utils.git", rev = "main"}
 
 [tool.poetry.group.dev.dependencies]
-black = {extras = ["d"], version = "^23.1.0"}
+ruff = "^0.4.7"
 ansible = "^7.2.0"
 
 [build-system]
@@ -19,3 +19,14 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 {{ cookiecutter.__bin_name }} = "{{ cookiecutter.__project_slug }}.app:main"
+
+[tool.ruff]
+# Same as Black.
+line-length = 120
+
+[tool.ruff.lint.isort]
+order-by-type = true
+relative-imports-order = "closest-to-furthest"
+extra-standard-library = ["typing"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+known-first-party = []
