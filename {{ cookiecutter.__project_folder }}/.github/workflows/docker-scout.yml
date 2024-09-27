@@ -51,7 +51,7 @@ jobs:
           load: true
           secrets: |
             GITHUB_TOKEN=${{ secrets.GIT_TOKEN }}
-          tags: ghcr.io/cap-dcwiz/dcwiz-app-simulation:${{ env.IMAGE_VERSION }}
+          tags: ghcr.io/cap-dcwiz/{{ cookiecutter.__image_name }}:${{ env.IMAGE_VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -68,7 +68,7 @@ jobs:
         with:
           command: cves,recommendations
           sarif-file: dockerscout-output.json
-          image: ghcr.io/cap-dcwiz/dcwiz-app-simulation:${{ env.IMAGE_VERSION }}
+          image: ghcr.io/cap-dcwiz/{{ cookiecutter.__image_name }}:${{ env.IMAGE_VERSION }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts
