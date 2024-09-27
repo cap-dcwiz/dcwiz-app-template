@@ -1,0 +1,53 @@
+name: Version Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - 'README.md'
+      - '.gitignore'
+      - '.github/**'
+      - 'docs/**'
+
+jobs:
+  check-version:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Get Poetry version from base branch
+        id: get_base_version
+        run: echo "base_poetry_version=$(poetry version | awk '{print $4}')" >> $GITHUB_ENV
+
+      - name: Checkout head branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Get Poetry version from head branch
+        id: get_head_version
+        run: echo "head_poetry_version=$(poetry version | awk '{print $4}')" >> $GITHUB_ENV
+
+      - name: Compare Poetry versions
+        run: |
+          if [ "${{ env.base_poetry_version }}" == "${{ env.head_poetry_version }}" ]; then
+            echo "Poetry version has not been updated in pyproject.toml"
+            exit 1 # This will cause the workflow to fail
+          else
+            echo "Poetry version has been updated in pyproject.toml"
+          fi
