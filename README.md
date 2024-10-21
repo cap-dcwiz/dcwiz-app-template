@@ -57,6 +57,8 @@ DCWIZ_APP_CONFIG=config/config.toml poetry run alembic revision --autogenerate
 DCWIZ_APP_CONFIG=config/config.toml poetry run alembic upgrade head
 ```
 
+<!-- Deployment is now deprecated in favor of dcwiz-projects centralised development -->
+<!--
 ## Deployment
 
 Note: all the commands should be run in poetry virtual environment.
@@ -112,4 +114,4 @@ Note: this command will remove all the data in the database, as well as populate
 
 1. ADD `SSH_PRIVATE_KEY` in the repository secrets.
 2. Repo settings => Actions => General => Enable "Read and write permissions" 
-3. Package settings => Manage Action access => add repo
+3. Package settings => Manage Action access => add repo -->
