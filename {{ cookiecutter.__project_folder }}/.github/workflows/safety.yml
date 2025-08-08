@@ -22,7 +22,7 @@ jobs:
 
       - name: Run safety
         env:
-          SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
+          SAFETY_API_KEY: {{ cookiecutter.github_secrets_syntax }}
         id: run_safety
         run: |
           set +e
