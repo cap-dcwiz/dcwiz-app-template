@@ -10,8 +10,8 @@ python = "^3.11"
 dcwiz-app-utils = {git = "https://github.com/cap-dcwiz/dcwiz-app-utils.git", rev = "main"}
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.4.7"
-ansible = "^7.2.0"
+ruff = "^0.12.8"
+ansible = "^11.8.0"
 
 [build-system]
 requires = ["poetry-core"]
