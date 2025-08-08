@@ -22,7 +22,7 @@ jobs:
 
       - name: Run safety
         env:
-          SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
+          {% raw %}SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}{% endraw %}
         id: run_safety
         run: |
           set +e
