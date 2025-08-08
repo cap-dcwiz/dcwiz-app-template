@@ -13,13 +13,13 @@ on:
 
 jobs:
   check-version:
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout base branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.base_ref }}
+          ref: {{ '${{ github.base_ref }}' }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -37,7 +37,7 @@ jobs:
       - name: Checkout head branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: {{ '${{ github.head_ref }}' }}
 
       - name: Get Poetry version from head branch
         id: get_head_version
@@ -45,9 +45,9 @@ jobs:
 
       - name: Compare Poetry versions
         run: |
-          if [ "${{ env.base_poetry_version }}" == "${{ env.head_poetry_version }}" ]; then
+          if [ "{{ '${{ env.base_poetry_version }}' }}" == "{{ '${{ env.head_poetry_version }}' }}" ]; then
             echo "Poetry version has not been updated in pyproject.toml"
-            exit 1 # This will cause the workflow to fail
+            exit 1
           else
             echo "Poetry version has been updated in pyproject.toml"
           fi
