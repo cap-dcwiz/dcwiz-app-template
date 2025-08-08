@@ -11,7 +11,6 @@
     "__image_name": "{{ cookiecutter.__project_folder }}",
     "app_path": "{{ cookiecutter.__container_name.split('-')[1:]|join('-') }}",
     "project_short_description": "{{ cookiecutter.project_name }}",
-    "github_secrets_syntax": "${{ secrets.SAFETY_API_KEY }}",
     "need_database": "y",
     "version": "0.1.0"
 }
