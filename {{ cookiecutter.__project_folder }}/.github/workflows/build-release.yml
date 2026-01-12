@@ -1,16 +1,29 @@
 name: Build-Release
 on:
+  workflow_dispatch:
   push:
+    branches:
+      - main
+      - develop
     tags:
       - 'v*'
+    paths-ignore:
+      - 'README.md'
+      - '.github/**'
+      - '.gitignore'
+      - 'docs/**'
 
 jobs:
-  Build-Docker-Images-Release:
-    uses: cap-dcwiz/reusable-workflows/.github/workflows/release_build-release.yml@main
+  build-release:
+    uses: cap-dcwiz/reusable-workflows/.github/workflows/release_build-release.yml@v1
     with:
-      image-name: "{{ cookiecutter.__image_name }}"
-      version-source: pyproject.toml
-      platforms: linux/amd64,linux/arm64
-      push-latest: true
+      image-name: {{ cookiecutter.__image_name }}
+      # version-source can be either 'package.json' or 'pyproject.toml' depending on the project type
+      version-source: ${{ startsWith(github.ref, 'refs/tags/v') && 'git-tag' || 'package.json' }}
+      version-prefix: ${{ (github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch') && 'develop' || '' }}
+      platforms: ${{ startsWith(github.ref, 'refs/tags/v') && 'linux/amd64,linux/arm64' || (github.ref == 'refs/heads/main' && 'linux/amd64,linux/arm64' || 'linux/amd64') }}
+      push-latest: ${{ startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main' }}
+      push-dev-latest: ${{ github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch' }}
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
