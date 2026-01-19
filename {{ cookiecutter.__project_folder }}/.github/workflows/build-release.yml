@@ -19,11 +19,11 @@ jobs:
     with:
       image-name: {{ cookiecutter.__image_name }}
       # version-source can be either 'package.json' or 'pyproject.toml' depending on the project type
-      version-source: ${{ startsWith(github.ref, 'refs/tags/v') && 'git-tag' || 'package.json' }}
-      version-prefix: ${{ (github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch') && 'develop' || '' }}
-      platforms: ${{ startsWith(github.ref, 'refs/tags/v') && 'linux/amd64,linux/arm64' || (github.ref == 'refs/heads/main' && 'linux/amd64,linux/arm64' || 'linux/amd64') }}
-      push-latest: ${{ startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main' }}
-      push-dev-latest: ${{ github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch' }}
+      version-source: {% raw %}${{ startsWith(github.ref, 'refs/tags/v') && 'git-tag' || 'package.json' }}{% endraw %}
+      version-prefix: {% raw %}${{ (github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch') && 'develop' || '' }}{% endraw %}
+      platforms: {% raw %}${{ startsWith(github.ref, 'refs/tags/v') && 'linux/amd64,linux/arm64' || (github.ref == 'refs/heads/main' && 'linux/amd64,linux/arm64' || 'linux/amd64') }}{% endraw %}
+      push-latest: {% raw %}${{ startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main' }}{% endraw %}
+      push-dev-latest: {% raw %}${{ github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch' }}{% endraw %}
     secrets:
-      REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      REGISTRY_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+      GIT_TOKEN: {% raw %}${{ secrets.GIT_TOKEN }}{% endraw %}
