@@ -8,6 +8,7 @@ packages = [{include = "{{ cookiecutter.__project_slug }}"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 dcwiz-app-utils = {git = "https://github.com/cap-dcwiz/dcwiz-app-utils.git", rev = "main"}
+sqlalchemy = {version = "^2.0.0", extras = ["asyncio"]}
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.12.8"
