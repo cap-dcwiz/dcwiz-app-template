@@ -19,11 +19,12 @@ jobs:
     with:
       image-name: {{ cookiecutter.__image_name }}
       # version-source can be either 'package.json' or 'pyproject.toml' depending on the project type
-      version-source: {% raw %}${{ startsWith(github.ref, 'refs/tags/v') && 'git-tag' || 'package.json' }}{% endraw %}
+      version-source: {% raw %}${{ startsWith(github.ref, 'refs/tags/v') && 'git-tag' || 'pyproject.toml' }}{% endraw %}
       version-prefix: {% raw %}${{ (github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch') && 'develop' || '' }}{% endraw %}
       platforms: {% raw %}${{ startsWith(github.ref, 'refs/tags/v') && 'linux/amd64,linux/arm64' || (github.ref == 'refs/heads/main' && 'linux/amd64,linux/arm64' || 'linux/amd64') }}{% endraw %}
       push-latest: {% raw %}${{ startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main' }}{% endraw %}
       push-dev-latest: {% raw %}${{ github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch' }}{% endraw %}
     secrets:
       REGISTRY_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
-      GIT_TOKEN: {% raw %}${{ secrets.GIT_TOKEN }}{% endraw %}
+      DEPLOY_BOT_APP_ID: {% raw %}${{ secrets.DEPLOY_BOT_APP_ID }}{% endraw %}
+      DEPLOY_BOT_PRIVATE_KEY: {% raw %}${{ secrets.DEPLOY_BOT_PRIVATE_KEY }}{% endraw %}

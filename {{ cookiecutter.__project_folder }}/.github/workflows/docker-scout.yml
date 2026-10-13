@@ -40,6 +40,14 @@ jobs:
           username: {{ '${{ github.actor }}' }}
           password: {{ '${{ secrets.GITHUB_TOKEN }}' }}
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: {{ '${{ secrets.DEPLOY_BOT_APP_ID }}' }}
+          private-key: {{ '${{ secrets.DEPLOY_BOT_PRIVATE_KEY }}' }}
+          owner: cap-dcwiz
+
       - name: Build and load Docker image
         env:
           IMAGE_VERSION: {{ '${{ env.image_version }}' }}
@@ -50,7 +58,7 @@ jobs:
           push: false
           load: true
           secrets: |
-            GITHUB_TOKEN={{ '${{ secrets.GIT_TOKEN }}' }}
+            GITHUB_TOKEN={{ '${{ steps.app-token.outputs.token }}' }}
           tags: ghcr.io/cap-dcwiz/{{ cookiecutter.__image_name }}:{{ '${{ env.IMAGE_VERSION }}' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
