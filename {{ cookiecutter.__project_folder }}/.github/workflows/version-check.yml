@@ -32,7 +32,7 @@ jobs:
 
       - name: Get Poetry version from base branch
         id: get_base_version
-        run: echo "base_poetry_version=$(poetry version | awk '{print $4}')" >> $GITHUB_ENV
+        run: echo "base_poetry_version=$(poetry version -s)" >> $GITHUB_ENV
 
       - name: Checkout head branch
         uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
 
       - name: Get Poetry version from head branch
         id: get_head_version
-        run: echo "head_poetry_version=$(poetry version | awk '{print $4}')" >> $GITHUB_ENV
+        run: echo "head_poetry_version=$(poetry version -s)" >> $GITHUB_ENV
 
       - name: Compare Poetry versions
         run: |

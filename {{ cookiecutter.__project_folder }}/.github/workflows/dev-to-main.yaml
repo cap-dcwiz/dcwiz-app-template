@@ -1,0 +1,43 @@
+{% raw %}name: Promote to Main
+on:
+  schedule:
+    # 9am UTC on the 15th of Mar, Jun, Sep, Dec (~2 weeks before quarter end)
+    - cron: '0 9 15 3,6,9,12 *'
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        description: 'Release branch name (e.g. release/Q1-2026)'
+        required: false
+
+jobs:
+  derive-branch:
+    runs-on: ubuntu-latest
+    outputs:
+      release_branch: ${{ steps.branch.outputs.name }}
+    steps:
+      - name: Derive release branch name
+        id: branch
+        run: |
+          if [ -n "${{ inputs.release_branch }}" ]; then
+            echo "name=${{ inputs.release_branch }}" >> "$GITHUB_OUTPUT"
+          else
+            # Auto-generate: release/Q1-2026, release/Q2-2026, etc.
+            MONTH=$(date +%-m)
+            YEAR=$(date +%Y)
+            if [ "$MONTH" -le 3 ]; then Q=Q1
+            elif [ "$MONTH" -le 6 ]; then Q=Q2
+            elif [ "$MONTH" -le 9 ]; then Q=Q3
+            else Q=Q4; fi
+            echo "name=release/${Q}-${YEAR}" >> "$GITHUB_OUTPUT"
+          fi
+
+  promote:
+    needs: derive-branch
+    uses: cap-dcwiz/reusable-workflows/.github/workflows/release_dev-to-main.yml@main
+    with:
+      release_branch: ${{ needs.derive-branch.outputs.release_branch }}
+    secrets:
+      APP_ID: ${{ secrets.RELEASE_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+      OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
+{% endraw %}
